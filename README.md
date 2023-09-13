@@ -1,3 +1,5 @@
+Kode Adaptable: https://faymart.adaptable.app/main/
+
 # Step by Step
 **1. Membuat Project Django**
 

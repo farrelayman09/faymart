@@ -352,7 +352,7 @@ List of urlpatterns tersebut perlu ditambahkan dengan path yang berisi jenis vie
 
 ## Mengakses kelima URL di poin 2 menggunakan Postman, membuat screenshot dari hasil akses URL pada Postman, dan menambahkannya ke dalam README.md.
 - HTML
-<img width="1440" alt="Screen Shot 2023-09-20 at 05 31 42" src="https://github.com/farrelayman09/faymart/assets/125422538/5ce1f439-2b97-4c6d-a12a-2bfefcff0e1a"><br>
+<img width="1070" alt="Screen Shot 2023-09-20 at 11 33 52" src="https://github.com/farrelayman09/faymart/assets/125422538/cd1f359f-af09-4082-ac5f-d64e4ccf8e7d">
 
 - XML
 <img width="1440" alt="Screen Shot 2023-09-20 at 05 11 11" src="https://github.com/farrelayman09/faymart/assets/125422538/a09de55e-2936-43cc-842e-6d79c85d90d6"><br>

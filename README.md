@@ -1,6 +1,7 @@
 Link Adaptable: https://faymart.adaptable.app/main/
 
-# Step by Step
+# Tugas 2
+## Step by Step
 **1. Membuat Project Django**
 
 <p align="justify">Sebelum kita membuat project Django baru, tentunya kita perlu menyiapkan repository lokal dan remote, menginsiasi repo lokal, menghubungkan kedua repository tersebut dengan perintah 'git branch -M main', dan 'git remote add origin <URL_REPO>'. setelah itu selesai, kita bisa mulai membuat project Django yang baru. Pertama kita membuat virtual environment baru dengan 'python3 -m venv env' (di terminal lain bisa saja python saja), kemudian menulis command 'source env/bin/activate' (macOS).
@@ -107,7 +108,7 @@ Berkas urls.py pada aplikasi main inilah yang bertanggung jawab untuk mengatur r
 Kita dapat melakukan deployment melalui Adaptable. Kita perlu memilih repository yang kita pakai, dalam konteks ini saya akan memakai faymart. Lalu, kita perlu memilih spesifikasi app template dan basis data yang sesuai (dalam kasus ini saya memakai Python App Template dan PostgreSQL). Setelah itu, kita dapat mencentang HTTP listener on Port dan mendepoy. Perlu diperhatikan bahwa untuk menjalankan projek django kita di web kita perlu mengetik ```python3 manage.py runserver``` di terminal.
 
 
-# Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
+## Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 ![image](https://github.com/farrelayman09/faymart/assets/125422538/43de6f41-e96b-4905-8adc-0e4cd3c654f3)
 sumber: https://www.interviewbit.com/blog/django-architecture/
 
@@ -116,10 +117,249 @@ sumber: https://www.interviewbit.com/blog/django-architecture/
 - models.py berperan sebagai komponen yang bertanggung jawab untuk mengatur dan mengelola data dari aplikasi. Di sinilah kita menginitialize atribut/variabel-variabel yang ingin digunakan.
 - berkas html adalal template dari implementasi MVT ini. main.html berfungsi untuk mengatur tampilan atau antarmuka pengguna. Template ini memisahkan kode HTML dari logika aplikasi.
 
-# Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
+## Jelaskan mengapa kita menggunakan virtual environment? Apakah kita tetap dapat membuat aplikasi web berbasis Django tanpa menggunakan virtual environment?
 Dengan menggunakan virtual environment, Anda dapat memastikan bahwa proyek Anda tetap stabil dan konsisten di berbagai lingkungan. Lingkungan yang Dapat Direproduksi: Dengan virtual environment, Anda dapat membuat lingkungan yang dapat direproduksi dengan menentukan versi Python yang sesuai dan package lain yang diperlukan oleh project kita. jika kita menginstal semua package di local environment kita, package tersebut dapat collide saat kita mengerjakan banyak project. Oleh karena itu memiliki virtualenv untuk setiap project dianggap semacam failsafe.
 
-# Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
+## Jelaskan apakah itu MVC, MVT, MVVM dan perbedaan dari ketiganya.
 MVC berarti model, view, and controller:  controller dan view component memiliki a one-to-many relationship. 
 MVP berarti model, view, and presenter: ada one-to-one relationship antara presenter dan view di architecture ini.
 MVVM berarti model, view, and view model: MVVM memperbolehkan mapping multiple views dengan single view mode, allowing one too many relationships
+
+# Tugas 3
+
+
+## Apa perbedaan antara form POST dan form GET dalam Django?
+POST digunakan untuk meng-add/mengubah data ke server. Jika Django login form di-returned menggunakan POST method, browser bundles up data form tersebut, meng-encodes untuk transmission, mengirimkannya ke server, dan menerima kembali responsnya.
+
+GET digunakan untuk mengambil/retrieve data dari server. GET, mem-bundle submitted data menjadi string, dan menggunakannya untuk merancang  URL. URL-nya mengandung address where ke mana data perlu dikirim sekaligus data key dan valuenya.
+
+## Apa perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data?
+
+**XML**<br>
+XML (Extensible Markup Language) dirancang untuk membawa data, bukan untuk menampilkan data. XML adalah bahasa markup yang mendefinisikan seperangkat aturan untuk men-encode dokumen dalam format yang dapat dibaca manusia dan mesin. Berikut adalah karakteristiknya:
+- XML tidak mensupport array
+- lebih sulit dibaca dibandingkan JSON
+- menggunakan endtag
+- more secure
+- mendukung comments
+- any encoding
+
+**JSON**<br>
+JSON (JavaScript Object Notation) adalah format pertukaran data yang lightweight dan sepenuhnya tidak bergantung pada language. Berikut adalah karakteristiknya:
+- JSON mensupport array
+- lebih mudah dibaca dibandingkan XML
+- tidak menggunakan endtag
+- less secure
+- tidak mendukung comments
+- only UTF-8 encoding
+
+**HTML**<br>
+HTML adalah markup language yang lebih digunakan untuk mengatur kerangka tampilan page. Berbeda dengan XML atau JSON yang menyimpan dan men-transport data, HTML berfungsi menampilkan data (display).
+
+## Mengapa JSON sering digunakan dalam pertukaran data antara aplikasi web modern?
+JSON semakin populer di API code programming dan layanan web karena membantu dalam data interchange dan hasil layanan web yang lebih cepat. JSON berbasis text, lightweight, dan memiliki data format yang easy-to-parse sehingga tak butuh code tambahan untuk parsing.
+
+## STEP-BY-STEP
+## Membuat input form untuk menambahkan objek model pada app sebelumnya.
+
+Pertama, sayake forms.py di folder main untuk mengimport ModelForm dari django.forms dan Product dan main.models yang telah dibuat sebelumnya. 
+```
+from django.forms import ModelForm
+from main.models import Product
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = ["name", "price", "amount", "description"]
+```
+Saya menulis``` model = Product``` untuk menunjukkan model yang digunakan untuk form. Ketika data dari form disimpan, isi dari form akan disimpan menjadi sebuah objek Product. Selain itu, saya juga menambahkan name, price, amount, dan description sebagai field yang akan saya pakai di page.
+
+Lalu, saya ke views.py yang ada di folder main dan menambahkan beberapa import
+```
+from django.http import HttpResponseRedirect
+from main.forms import ProductForm
+from django.urls import reverse
+```
+Kemudian, saya membuat fungsi create_product yang berfungsi untuk menghasilkan formulir yang dapat menambahkan data produk secara otomatis ketika data di-submit dari form.
+```
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+baris ``` return HttpResponseRedirect(reverse('main:show_main')) ```digunakan untuk melakukan redirect setelah data form berhasil disimpan.
+
+Kemudian saya menambahkan lines di fungsi show_main sedemikian sehingga akhirnya seperti ini
+```
+def show_main(request):
+    products = Product.objects.all()
+
+    context = {
+        'name': 'Farrel Ayman Abisatyo', # Nama kamu
+        'class': 'PBP F', # Kelas PBP kamu
+        'products': products
+    }
+
+    return render(request, "main.html", context)
+```
+Setelah itu, saya ke urls.py di folder main dan mengimport fungsi-fungsi tersebut supaya dapat dipakai
+
+```
+from main.views import show_main, create_product
+```
+
+Kemudian, di templates di folder main saya membuat folder html baru dengan namacreate_product.html yang berisi kode
+```
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+Kode ini berfungsi untuk "menambahkan" produk baru di page. Bisa dilihat bahwa ```{{ form.as_table }}``` digunakan untuk menampilkan fields form yang sudah dibuat pada forms.py sedalam bentuk  table. Sementara itu,``` <input type="submit" value="Add Product"/> ```digunakan sebagai tombol submit untuk mengirimkan request ke view ```create_product(request)```.
+
+Setelah itu, saya menambahkan kode di block content sebagai berikut
+```
+...
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Amount</th>
+        <th>Description</th>
+        <th>Date Added</th>
+    </tr>
+
+    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+
+    {% for product in products %}
+        <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.amount}}</td>
+            <td>{{product.description}}</td>
+            <td>{{product.date_added}}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br />
+
+<a href="{% url 'main:create_product' %}">
+    <button>
+        Add New Product
+    </button>
+</a>
+
+{% endblock content %}
+```
+Saya menambahkan kode di atas untuk menampilkan data produk seperti Name, Price, Amount, Description, dan Date added. Saya juga menambahkan tombol "Add New Product" yang akan redirect ke halaman form.
+
+## Tambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID.
+Berikut adalah 5 fungsi views untuk melihat objek yang terdapat di dalam views.py
+
+- HTML
+```
+def show_main(request):
+    products = Product.objects.all()
+
+    context = {
+        'name': 'Farrel Ayman Abisatyo', # Nama
+        'class': 'PBP F', # Kelas PBP
+        'products': products,
+    }
+
+    return render(request, "main.html", context)
+
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+
+- XML
+```
+def show_xml(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+```
+- JSON
+```
+def show_json(request):
+    data = Product.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+
+- XML BY ID
+```
+def show_xml_by_id(request, id):
+    data = Product.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+```
+- JSON BY ID
+```
+def show_json_by_id(request, id):
+    data = Product.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+
+##  Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2.
+Untuk membuat routing URL untuk setiap views yang ada, saya ke urls.py di main dan mengimport fungsi yang telah dibuat sebelumnya 
+```
+main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id
+```
+Kemudian, saya menambahkan list of urlpatterns sedemikian sehingga pada akhirnya, list tersebut akan terlihat seperti ini
+```
+urlpatterns = [
+    path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
+    path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
+    path('json/', show_json, name='show_json'),
+    path('xml/', show_xml, name='show_xml'),
+    path('create-product', create_product, name='create_product'),
+    path('', show_main, name='show_main'),
+]
+```
+List of urlpatterns tersebut perlu ditambahkan dengan path yang berisi jenis view yang telah dibuat supaya kita dapat mengakses fungsi views tersebut.
+
+## Mengakses kelima URL di poin 2 menggunakan Postman, membuat screenshot dari hasil akses URL pada Postman, dan menambahkannya ke dalam README.md.
+- HTML
+<img width="1440" alt="Screen Shot 2023-09-20 at 05 31 42" src="https://github.com/farrelayman09/faymart/assets/125422538/5ce1f439-2b97-4c6d-a12a-2bfefcff0e1a"><br>
+
+- XML
+<img width="1440" alt="Screen Shot 2023-09-20 at 05 11 11" src="https://github.com/farrelayman09/faymart/assets/125422538/a09de55e-2936-43cc-842e-6d79c85d90d6"><br>
+
+- XML by ID
+<img width="1440" alt="Screen Shot 2023-09-20 at 05 26 00" src="https://github.com/farrelayman09/faymart/assets/125422538/2906978c-56a6-4201-b54a-6c8aeda19014"><br>
+
+- JSON
+<img width="1440" alt="Screen Shot 2023-09-20 at 05 25 50" src="https://github.com/farrelayman09/faymart/assets/125422538/5ec096c3-ba93-4a8e-a9d7-8dc76ab225b8"><br>
+
+- JSON by ID
+<img width="1440" alt="Screen Shot 2023-09-20 at 05 24 34" src="https://github.com/farrelayman09/faymart/assets/125422538/890348b0-7276-4428-9627-72b9a483f084"><br>
+
+
+

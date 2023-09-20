@@ -213,7 +213,7 @@ Setelah itu, saya ke urls.py di folder main dan mengimport fungsi-fungsi tersebu
 from main.views import show_main, create_product
 ```
 
-Kemudian, di templates di folder main saya membuat folder html baru dengan namacreate_product.html yang berisi kode
+Kemudian, di templates di folder main saya membuat folder html baru dengan nama create_product.html yang berisi kode
 ```
 {% extends 'base.html' %} 
 
@@ -300,6 +300,7 @@ def create_product(request):
     context = {'form': form}
     return render(request, "create_product.html", context)
 ```
+return HttpResponseRedirect(reverse('main:show_main')) digunakan untuk melakukan redirect setelah data form berhasil disimpan. Sementara itu, Fungsi render digunakan untuk me-render tampilan HTML dengan menggunakan data yang diberikan.
 
 - XML
 ```
@@ -307,12 +308,14 @@ def show_xml(request):
     data = Product.objects.all()
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 ```
+return function berupa HttpResponse yang berisi parameter data hasil query yang sudah diserialisasi menjadi XML dan parameter content_type dengan value "application/xml" (untuk format XML) 
 - JSON
 ```
 def show_json(request):
     data = Product.objects.all()
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 ```
+return function berupa HttpResponse yang berisi parameter data hasil query yang sudah diserialisasi menjadi JSON dan parameter content_type dengan value "application/json" (untuk format JSON).
 
 - XML BY ID
 ```
@@ -320,12 +323,14 @@ def show_xml_by_id(request, id):
     data = Product.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 ```
+konsepnya sama seperti sebelumnya hanya saja terdapat parameter tambahan, yakni id.
 - JSON BY ID
 ```
 def show_json_by_id(request, id):
     data = Product.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 ```
+konsepnya sama juga seperti sebelumnya dengan tambahan parameter id.
 
 ##  Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2.
 Untuk membuat routing URL untuk setiap views yang ada, saya ke urls.py di main dan mengimport fungsi yang telah dibuat sebelumnya 

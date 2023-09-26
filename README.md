@@ -1,14 +1,15 @@
 
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
+- [Tugas 4](#tugas-4)
 
 
 Link Adaptable: https://faymart.adaptable.app/main/
 
 # Tugas 2
-Nama: Farrel Ayman Abisatyo
-Kelas: PBP F
-NPM: 2206828916
+Nama: Farrel Ayman Abisatyo<br>
+Kelas: PBP F<br>
+NPM: 2206828916<br>
 
 ## Step by Step
 **1. Membuat Project Django**
@@ -135,7 +136,9 @@ MVP berarti model, view, and presenter: ada one-to-one relationship antara prese
 MVVM berarti model, view, and view model: MVVM memperbolehkan mapping multiple views dengan single view mode, allowing one too many relationships
 
 # Tugas 3
-
+Nama: Farrel Ayman Abisatyo<br>
+Kelas: PBP F<br>
+NPM: 2206828916<br>
 
 ## Apa perbedaan antara form POST dan form GET dalam Django?
 POST digunakan untuk meng-add/mengubah data ke server. Jika Django login form di-returned menggunakan POST method, browser bundles up data form tersebut, meng-encodes untuk transmission, mengirimkannya ke server, dan menerima kembali responsnya.
@@ -374,6 +377,23 @@ List of urlpatterns tersebut perlu ditambahkan dengan path yang berisi jenis vie
 
 - JSON by ID
 <img width="1440" alt="Screen Shot 2023-09-20 at 05 24 34" src="https://github.com/farrelayman09/faymart/assets/125422538/890348b0-7276-4428-9627-72b9a483f084"><br>
+
+
+
+# Tugas 4
+Nama: Farrel Ayman Abisatyo<br>
+Kelas: PBP F<br>
+NPM: 2206828916<br>
+
+## Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
+Django UserCreationForm adalah sebuak class yang dapat digunakan untuk membuat new user yang bisa menggunakan aplikasi web kita.<br>
+Kelebihan: cara yang praktis dan efisien untuk membuat form pembuatan user baru<br>
+Kekurangan: form ini hanya menyediakan 3 field secara default, yakni username, password1, dan password2 (konfirmasi password)<br>
+
+## Apa perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+Dalam konteks Django, autentikasi adalah proses verifikasi siapa pengguna (login), sedangkan otorisasi adalah proses verifikasi bahwa pengguna tersebut mempunyai akses terhadap sesuatu. Autentikasi penting karena proses ini memverifikasi siapa yang me-login ke aplikasi web kita sehingga hanya user dengan credentials yang tepat dapat masuk. Authorization penting karena proses ini memverifikasi hak akses pengguna terhadap data di web sehingga melindungi informasi dan sistem dari _unauthorized access_
+
+##  Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
 
 
 

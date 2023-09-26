@@ -1,6 +1,15 @@
+
+- [Tugas 2](#tugas-2)
+- [Tugas 3](#tugas-3)
+
+
 Link Adaptable: https://faymart.adaptable.app/main/
 
 # Tugas 2
+Nama: Farrel Ayman Abisatyo
+Kelas: PBP F
+NPM: 2206828916
+
 ## Step by Step
 **1. Membuat Project Django**
 

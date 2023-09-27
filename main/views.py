@@ -1,6 +1,6 @@
 import datetime
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from main.forms import ItemForm
 from django.urls import reverse
 from main.models import Item
@@ -12,6 +12,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
 
 
 
@@ -39,6 +41,49 @@ def create_product(request):
 
     context = {'form': form}
     return render(request, "create_product.html", context)
+
+def remove_product(request, product_id):  # to remove item/product
+    if request.method == "DELETE":
+        item = get_object_or_404(Item, pk=product_id)
+
+        # Ensure the user has the necessary permissions to delete the product
+        if item.user == request.user:
+            item.delete()
+            return JsonResponse({'message': 'Product deleted successfully.'}, status=204)
+        else:
+            return JsonResponse({'error': 'You do not have permission to delete this product.'}, status=403)
+    else:
+        return JsonResponse({'error': 'Invalid request method. Use DELETE to remove a product.'}, status=400)
+
+@login_required(login_url='/login')
+def increment_amount(request, product_id): # to increment amount
+    try:
+        item = get_object_or_404(Item, pk=product_id)
+
+        # Ensure the user has the necessary permissions to increment the amount
+        if item.user == request.user:
+            item.amount += 1
+            item.save()
+            return JsonResponse({'new_amount': item.amount})
+        else:
+            return JsonResponse({'error': 'You do not have permission to increment the amount.'}, status=403)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@login_required(login_url='/login')
+def decrement_amount(request, product_id):  # to decrement amount
+    try:
+        item = get_object_or_404(Item, pk=product_id)
+
+        # Ensure the user has the necessary permissions to decrement the amount
+        if item.user == request.user:
+            item.amount = max(0, item.amount - 1)
+            item.save()
+            return JsonResponse({'new_amount': item.amount})
+        else:
+            return JsonResponse({'error': 'You do not have permission to decrement the amount.'}, status=403)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 def show_xml(request):
     data = Item.objects.all()

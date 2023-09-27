@@ -1,9 +1,13 @@
 from django.urls import path
-from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id, register, login_user, logout_user
+from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id
+from main.views import register, login_user, logout_user, remove_product, increment_amount, decrement_amount
 
 app_name = 'main'
 
 urlpatterns = [
+    path('increment_amount/<int:product_id>/', increment_amount, name='increment_amount'),
+    path('decrement_amount/<int:product_id>/', decrement_amount, name='decrement_amount'),
+    path('remove_product/<int:product_id>/', remove_product, name='remove_product'),
     path('logout/', logout_user, name='logout'),
     path('login/', login_user, name='login'),
     path('register/', register, name='register'),

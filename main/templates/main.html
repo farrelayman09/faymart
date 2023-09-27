@@ -15,6 +15,7 @@
         <th>Amount</th>
         <th>Description</th>
         <th>Date Added</th>
+
     </tr>
 
     {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
@@ -23,10 +24,22 @@
     <tr>
         <td>{{item.name}}</td>
         <td>{{item.price}}</td>
-        <td>{{item.amount}}</td>
+        <td id="amount_{{ item.id }}">{{item.amount}}</td>
         <td>{{item.description}}</td>
         <td>{{item.date_added}}</td>
+        <td>
+            <button onclick="incrementAmount({{ item.id }})">+</button>
+            <button onclick="decrementAmount({{ item.id }})">-</button>
+        </td>
+        <td>
+            <form action="{% url 'main:remove_product' product_id=item.id %}" method="POST" id="deleteForm">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="button" onclick="deleteProduct({{ item.id }})">Remove Product</button>
+            </form>
+        </td>
     </tr>
+
     {% endfor %}
 </table>
 
@@ -45,5 +58,60 @@
         Logout
     </button>
 </a>
+
+<script>
+    function incrementAmount(productId) {
+        updateAmount(productId, 'increment');
+    }
+
+    function decrementAmount(productId) {
+        updateAmount(productId, 'decrement');
+    }
+
+    function updateAmount(productId, action) {
+        const url = action === 'increment' ? `/increment_amount/${productId}/` : `/decrement_amount/${productId}/`;
+        const csrfToken = '{{ csrf_token }}';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ action: action }),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error updating amount:', response.statusText);
+            }
+        })
+        .then(data => {
+            document.getElementById(`amount_${productId}`).textContent = data.new_amount;
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    function deleteProduct(productId) {
+        const url = `/remove_product/${productId}/`;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Product removed successfully');
+                // Optionally, you can reload the page or update the product list after successful deletion
+                location.reload();  // Reload the page
+            } else {
+                console.error('Error removing product:', response.status);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
 
 {% endblock content %}

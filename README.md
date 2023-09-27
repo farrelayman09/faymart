@@ -544,10 +544,10 @@ def logout_user(request):
     logout(request)
     return redirect('main:login')
 ```
-Kita juga perlu menambahkan tombol logout di main.html. Saya menambahkannya setelah hyperlink Add New Product
+Kita juga perlu menambahkan tombol logout di main.html. Saya menambahkannya setelah hyperlink Add New Product.
 Kemudian, tentunya kita juga mengimport serta menambahkan path logout di urlpatterns di main/urls.py
 
-Setelah itu, kita dapat menambahkan aspek restriksi untuk main page. di main/views.py kita dapat menambahkan import serta kode sebagai berikut:
+Setelah itu, kita dapat menambahkan aspek restriksi untuk main page. di main/views.py, kita menambahkan import serta kode sebagai berikut:
 ```
 from django.contrib.auth.decorators import login_required
 ```
@@ -597,10 +597,11 @@ from django.contrib.auth.models import User
 ```
 
 Lalu, di models.py kita menambahkan model baru yakni
-class Item(models.Model): <!--- Nama class Product diubah menjadi Item di tugas 4 --->
+```
+class Item(models.Model): # Nama class Product saya ubah menjadi Item di tugas 4
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ...
-
+```
 kode diatas berfungsi untuk menghubungkan satu produk dengan satu user melalui sebuah relationship, dimana sebuah produk pasti terasosiasikan dengan seorang user. 
 Setelah itu, di main/views.py kita mengubah fungsi create_product menjadi sedemikian rupa
 ```

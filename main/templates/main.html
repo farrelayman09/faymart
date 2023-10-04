@@ -6,6 +6,10 @@
         background-color: #0DD8E9; /* Change this to the desired blue color */
         color: black; /* Set the text color to contrast with the background */
     }
+    /* CSS Style */
+    .last-row {
+    background-color: #9CF5FF;
+    }
 </style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -64,7 +68,7 @@
     {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
 
     {% for item in items %}
-    <tr {% if forloop.last %}style="background-color: #9CF5FF;"{% endif %}>
+    <tr {% if forloop.last %}class="last-row"{% endif %}>
         <td>{{item.name}}</td>
         <td>{{item.price}}</td>
         <td id="amount_{{ item.id }}">{{item.amount}}</td>

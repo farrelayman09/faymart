@@ -811,8 +811,15 @@ Untuk menambahkan warna background biru, saya menulis kode ini di atas kode navb
 ```
 Saya juga mengerjakan bonus dengan menambahkan kode for loop untuk mewarnai item terakhir di list
 ```
+/* CSS Style */
+    .last-row {
+    background-color: #9CF5FF;
+    }
+```
+kode ini ditambahkan di dalam tag ```<style>```. Kemudian, saya menambahkan for loop sebagai berikut di dalam table untuk mengimplement background di style.
+```
 {% for item in items %}
-    <tr {% if forloop.last %}style="background-color: #9CF5FF;"{% endif %}>
+    <tr {% if forloop.last %}class="last-row"{% endif %}>
         <td>{{item.name}}</td>
         <td>{{item.price}}</td>
         <td id="amount_{{ item.id }}">{{item.amount}}</td>
@@ -820,6 +827,7 @@ Saya juga mengerjakan bonus dengan menambahkan kode for loop untuk mewarnai item
         <td>{{item.date_added}}</td>
 ...
 ```
+
 
 
 

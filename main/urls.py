@@ -1,10 +1,12 @@
 from django.urls import path
 from main.views import show_main, create_product, show_xml, show_json, show_xml_by_id, show_json_by_id
-from main.views import register, login_user, logout_user, remove_product, increment_amount, decrement_amount
+from main.views import register, login_user, logout_user, remove_product, increment_amount, decrement_amount, edit_product, delete_product
 
 app_name = 'main'
 
 urlpatterns = [
+    path('delete/<int:id>', delete_product, name='delete_product'), # sesuaikan dengan nama fungsi yang dibuat
+    path('edit-product/<int:id>', edit_product, name='edit_product'),
     path('increment_amount/<int:product_id>/', increment_amount, name='increment_amount'),
     path('decrement_amount/<int:product_id>/', decrement_amount, name='decrement_amount'),
     path('remove_product/<int:product_id>/', remove_product, name='remove_product'),

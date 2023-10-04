@@ -2,6 +2,7 @@
 - [Tugas 2](#tugas-2)
 - [Tugas 3](#tugas-3)
 - [Tugas 4](#tugas-4)
+- [Tugas 5](#tugas-5)
 
 
 Link Adaptable: https://faymart.adaptable.app/main/
@@ -627,6 +628,92 @@ def show_main(request):
 ```
 Potongan kode diatas berfungsi untuk menampilkan objek Item yang terasosiasikan dengan user yang sedang login. Kode request.user.username berfungsi untuk menampilkan username pengguna yang login pada halaman main.
 Dengan adanya model baru, tentunya kita perlu melakukan migrasi. Ketika kita melakukan makemigrations kita memiliki opsi satu untuk menetapkan default value untuk field user. Lalu, kita ketik angka 1 lagi untuk menetapkan user dengan ID 1 (yang sudah kita buat sebelumnya) pada model yang sudah ada. Setelah itu selesai, kita dapat melakukan migrate sehingga model berhasil ditambahkan.
+
+# Tugas 5
+
+Nama: Farrel Ayman Abisatyo<br>
+Kelas: PBP F<br>
+NPM: 2206828916<br>
+
+## Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+
+Terdapat beberapa element selector yang dapat digunakan dari CSS
+- Paragraph
+    ```
+    /* Style all <p> elements */
+    p {
+      color: blue;
+    }
+    ```
+Selector ini untuk men-select dan mengs-style paragraph tertentu. Dalam kasus ini paragraph akan memiliki warna biru
+
+- Headings:
+  ```
+  h1 {
+  color: #fca205;
+  font-family: "Monospace";
+  font-style: italic;
+  }
+  ```
+  Selector headings berfungsi menselect dan mengs-style headers yang dispecify. 
+- Anchor
+  ```
+  /* Style all <a> elements */
+    a {
+      text-decoration: none;
+      color: #0066cc;
+    }
+  ```
+  Selector a berfungsi menselect dan mengs-style anchor element yang dispecify. anchor element ini biasanya berupa hyperlink
+
+- Lists
+  ```
+      /* Style all <ul> and <ol> elements */
+    ul, ol {
+      list-style-type: square;
+    }
+  ```
+  Selector list berfungsi menselect dan mengs-style list element yang dispecify, seperti <ul> (unordered lists) , <ol> (ordered lists), dan juga list items <li>. 
+- Tables
+  ```
+      /* Style all <table> elements */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+  ```
+  Selector list berfungsi menselect dan mengs-style table element yang dispecify.
+
+## Jelaskan HTML5 Tag yang kamu ketahui.
+
+- ```<head> </head>```
+  Berisi meta-information tentang HTML document tersebut,seperti character encoding, title, links ke stylesheets, dan scripts.
+- ```<title> </title>```
+  Meng-set title dari HTML document tersebut, yang nantinya akan didisplay di title bar browser.
+- ```<table></table>```
+  Mendefinisika dan meng-set table di dokumen html tersebut
+- ```<th></th>```
+  Mendefinisikan table header di table
+- ```<td></td>```
+  Mendefinisikan table data yang akan dimasukkan ke table
+
+## Jelaskan perbedaan antara margin dan padding.
+
+- Margin adalah ruang di luar elemen dan mempengaruhi jarak antara elemen tersebut dengan elemen lain.<br>
+    ```
+    div {
+      margin: 15px;
+    }
+    ```
+    Kode di atas akan meng-set margin yang memberi jarak antar elemen di luar sebesar 15 px.
+- Padding adalah ruang di dalam elemen dan mempengaruhi jarak antara batas elemen dengan konten di dalamnya.<br>
+    ```
+    div {
+      padding: 15px;
+    }
+    ```
+    Kode di atas akan meng-set padding yang memberi jarak antar elemen di dalam sebesar 15 px.
+
 
 
 

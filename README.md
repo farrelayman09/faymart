@@ -673,7 +673,7 @@ Selector ini untuk men-select dan mengs-style paragraph tertentu. Dalam kasus in
       list-style-type: square;
     }
   ```
-  Selector list berfungsi menselect dan mengs-style list element yang dispecify, seperti <ul> (unordered lists) , <ol> (ordered lists), dan juga list items <li>. 
+  Selector list berfungsi menselect dan mengs-style list element yang dispecify, seperti ```<ul>``` (unordered lists) , ```<ol> ```(ordered lists), dan juga list items ```<li>```. 
 - Tables
   ```
       /* Style all <table> elements */
@@ -713,6 +713,114 @@ Selector ini untuk men-select dan mengs-style paragraph tertentu. Dalam kasus in
     }
     ```
     Kode di atas akan meng-set padding yang memberi jarak antar elemen di dalam sebesar 15 px.
+## Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+Bootstrap:
+- Efficient/hemat waktu
+- kustomisasi yang lebih terbatas karena bergantung pada gaya dan desain bawaan.
+- Lebih besar dalam ukuran file karena memiliki banyak fitur dan komponen<br>
+
+Tailwind:
+- Limited pre-built components. 
+- Memungkinkan kustomisasi yang lebih besar
+- Lebih ringan dalam ukuran file karena hanya menggunakan kelas-kelas yang diperlukan
+
+Jadi, bisa disimpulkan bahwa misal kita ingin meng-customize web app kita dengan lebih leluasa, lebih baik menggunakan Tailwind. Sementara itu, jika kita ingin mendesain web app dengan cepat dan efisien serta menggunakan banyak komponen bawaan, sebaiknya menggunakan Bootstrap.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+
+Pertama, saya mengaktifkan virtual environment sebelum mengerjakan tugas. 
+Kemudian, saya ke main/templates/main.html dan menambahkan kode sebagai berikut.
+```
+{% block meta %}
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% endblock meta %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+J4jsl5c9zdLKaUk5Ae5f5b1bw6AUn5f5v8FZJoMxm6f5cH1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+```
+Kode ini berfungsi untuk menambahkan bootstrap CSS dan juga JS
+
+Setelah itu, saya menambahkan navbar dengan menulis kode di bagian atas script. Kode tersebut mengacu pada dokumentasi mengenai NavBar.
+Berikut adalah kodenya:
+```
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #0DD8E9; /* Change this to the desired blue color */
+        color: black; /* Set the text color to contrast with the background */
+    }
+</style>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">You are logged in as {{name}}</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'main:logout' %}"><button type="button" class="btn">Logout</button></a>
+                    <a class="nav-link disabled" aria-disabled="true"></a>
+                </li>
+            </ul>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+</nav>
+```
+Dapat dilihat bahwa saya menghapus tombol logout di bawah dan menambahkannya di NavBar dengan kode 
+```
+<li class="nav-item">
+    <a href="{% url 'main:logout' %}"><button type="button" class="btn">Logout</button></a>
+    <a class="nav-link disabled" aria-disabled="true"></a>
+</li>
+```
+Untuk menambahkan warna background biru, saya menulis kode ini di atas kode navbar
+```
+<style>
+    body {
+        background-color: #0DD8E9; /*  light blue  */
+        color: black; /* Set text color to contrast bg */
+    }
+</style>
+```
+Saya juga mengerjakan bonus dengan menambahkan kode for loop untuk mewarnai item terakhir di list
+```
+{% for item in items %}
+    <tr {% if forloop.last %}style="background-color: #9CF5FF;"{% endif %}>
+        <td>{{item.name}}</td>
+        <td>{{item.price}}</td>
+        <td id="amount_{{ item.id }}">{{item.amount}}</td>
+        <td>{{item.description}}</td>
+        <td>{{item.date_added}}</td>
+...
+```
+
 
 
 

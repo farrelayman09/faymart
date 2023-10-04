@@ -800,7 +800,7 @@ Dapat dilihat bahwa saya menghapus tombol logout di bawah dan menambahkannya di 
     <a class="nav-link disabled" aria-disabled="true"></a>
 </li>
 ```
-Untuk menambahkan warna background biru, saya menulis kode ini di atas kode navbar
+Untuk menambahkan warna background biru di tiap page, saya menulis kode ini di bawah block content
 ```
 <style>
     body {

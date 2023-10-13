@@ -3,6 +3,7 @@
 - [Tugas 3](#tugas-3)
 - [Tugas 4](#tugas-4)
 - [Tugas 5](#tugas-5)
+- [Tugas 6](#tugas-6)
 
 
 Link Adaptable: https://faymart.adaptable.app/main/
@@ -828,6 +829,202 @@ kode ini ditambahkan di dalam tag ```<style>```. Kemudian, saya menambahkan for 
 ...
 ```
 
+# Tugas 6
+
+Nama: Farrel Ayman Abisatyo<br>
+Kelas: PBP F<br>
+NPM: 2206828916<br>
+
+## Jelaskan perbedaan antara asynchronous programming dengan synchronous programming.
+Synchronous Programming:
+- Eksekusi seperti mengantre di kasir. Tugas satu harus menunggu sampai tugas sebelumnya selesai.
+- Jika ada tugas yang memakan waktu, program akan berhenti dan menunggu tugas tersebut selesai.
+- Model ini tidak memungkinkan untuk melakukan beberapa tugas secara bersamaan tanpa menggunakan beberapa thread atau proses.
+- Jika tugas-tugas tidak membutuhkan banyak waktu untuk dieksekusi dan tidak banyak operasi yang memblokir, synchronous programming dapat cukup efisien.<br>
+
+Asynchronous Programming:
+- Tugas dapat berjalan sendiri-sendiri tanpa harus menunggu yang lain selesai.
+- Jika ada tugas yang memakan waktu, program tidak akan berhenti. Ia akan melanjutkan ke tugas berikutnya.
+- Dapat mengelola banyak tugas secara bersamaan tanpa perlu thread tambahan. Ini memungkinkan efisiensi yang lebih tinggi dalam pengelolaan sumber daya.
+- Jika ada banyak operasi I/O yang membutuhkan waktu, atau tugas-tugas yang bisa dilakukan secara bersamaan, asynchronous programming dapat lebih efisien.<br>
+
+## Dalam penerapan JavaScript dan AJAX, terdapat penerapan paradigma event-driven programming. Jelaskan maksud dari paradigma tersebut dan sebutkan salah satu contoh penerapannya pada tugas ini.
+Paradigma Event-Driven Programming adalah suatu pendekatan di mana alur eksekusi program tidak ditentukan oleh urutan kode, tetapi ditentukan oleh kejadian (event) yang terjadi selama eksekusi program. Program akan merespons kejadian-kejadian ini dengan menjalankan fungsi-fungsi atau aksi-aksi tertentu.<br>
+
+Di tugas ini, event-driven programming terlihat dalam penanganan aksi klik tombol "Add Product by AJAX" dan tombol "Delete" pada setiap item produk.
+Ketika tombol "Add Product by AJAX" ditekan, event ini memicu fungsi addItem yang mengirim permintaan AJAX untuk menambahkan produk baru.
+Ketika tombol "Delete" pada setiap item produk ditekan, event ini memicu fungsi deleteItem yang mengirim permintaan AJAX untuk menghapus item produk tertentu.
+
+
+## Jelaskan penerapan asynchronous programming pada AJAX.
+Asynchronous programming pada AJAX memungkinkan kode JavaScript untuk melakukan tugas tanpa harus menunggu tugas sebelumnya selesai. Ini terjadi ketika melakukan permintaan ke server dan menerima tanggapan tanpa menghentikan kode lainnya. Penerapannya dapat melalui callback functions, Promises, atau async/await.
+
+## Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada library jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
+Secara sederhana, Fetch API adalah bagian dari JavaScript yang memungkinkan kita untuk melakukan permintaan (request) ke server dan menerima tanggapan (response) secara lebih modern dan native. Ia menggunakan Promises untuk mengelola respons dari server.
+
+jQuery, di sisi lain, adalah pustaka (library) JavaScript yang populer yang menyediakan fitur-fitur tambahan untuk memanipulasi halaman web, termasuk kemudahan dalam melakukan permintaan AJAX.
+
+Fetch API:
+- pros: Modern, bawaan dari JavaScript, sintaks relatif sederhana.
+- cons: Lebih baru, mungkin belum didukung sepenuhnya di browser lama.<br>
+
+jQuery:
+- pros: Cross-browser compatibility, menyederhanakan AJAX, memiliki banyak plugin.
+- cons: Membutuhkan unduhan tambahan, ukurannya lebih besar.<br>
+
+pendapat:
+ Menurut saya, pada akhirnya kembali lagi ke kebutuhan dan preferensi perancanag aplikasi web tersebut. Fetch API adalah pilihan yang modern, lebih native, dan memberikan kontrol yang lebih besar. Namun, jika sudah menggunakan jQuery dalam proyek Anda atau membutuhkan kemudahan dalam manajemen AJAX, maka jQuery tetap merupakan pilihan yang baik.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Pertama, saya mengaktifkan virtual environment terlebih dahulu.
+Kemudian, di main.views.py saya membuat dua fungsi baru:
+```
+def get_product_json(request):
+    product_item = Item.objects.filter(user=request.user)  # changed all to filter
+    return HttpResponse(serializers.serialize('json', product_item))
+```
+
+```
+...
+@csrf_exempt
+def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_item = Item(name=name, price=price, amount=amount, description=description, user=user)
+        new_item.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+```
+fungsi pertama untuk meng-get product melalui json, sementara fungsi kedua untuk meng-add item menggunakan AJAX. Seperti biasa, setelah membuat fungsi baru, saya ke urls.py, mengimport fungsi-fungsi tersebut, dan meng-add path-nya ke urlpatterns.
+
+Kemudian, di main.templates.main.html, saya meng-komen table dari week sebelumnya, dan menggantikannya dengan kode sebagai berikut:
+```
+<script>
+
+    async function getItems() {
+        return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
+    }
+
+    async function refreshItems() {
+            const items = await getItems();
+            const itemCardsContainer = document.getElementById("item_cards");
+            itemCardsContainer.innerHTML = "";
+
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.classList.add("col-lg-4", "col-md-6", "mb-4");
+
+                card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">${item.fields.name}</h5>
+                    <p class="card-text">${item.fields.description}</p>
+                    <p class="card-text">Amount: ${item.fields.amount}</p>
+                    <p class="card-text">Price: Rp${item.fields.price}</p>
+                    <p class="card-text">Date Added: ${item.fields.date_added}</p>
+                    <a><button onclick="deleteItem(${item.pk})" class="btn btn-danger" type="submit">Delete</button></a>
+                    <a><button onclick="incItem(${item.pk})" class="btn btn-danger" type="submit">+</button></a>
+                    <a><button onclick="decItem(${item.pk})" class="btn btn-danger" type="submit">-</button></a>
+                    </div>
+                </div>
+                `;
+                itemCardsContainer.appendChild(card);
+            });
+            }
+
+    refreshItems();
+
+    function addItem() {
+        fetch("{% url 'main:add_item_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItems)
+
+        document.getElementById("form").reset()
+        return false
+    }
+
+    document.getElementById("button_add").onclick = addItem
+```
+Dapat dilihat, saya juga mengimplementasi cards untuk menunjukkan item. 
+Lalu di bagian atas, saya menambahkan kode sebagai berikut untuk mengimplementasi modal Bootstrap saya.
+```
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="col-form-label">Price:</label>
+                        <input type="number" class="form-control" id="price" name="price"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+
+```
+Kode ini berfungsi untuk me-refresh data item secara asynchronous.
+saya sebelumnya jugah menambahkan kode sebagai berikut di atas button
+```
+<div class="container">
+    <div class="row" id="item_cards"></div>
+</div>
+```
+kode ini untuk membuat tata letak kontainer dengan kelas "container" yang memiliki satu baris dengan id "item_cards".
+
+Modal dengan form yang telah saya buat sebelumnya belum bisa digunakan untuk menambahkan data produk. Oleh karena itu, saya membuat fungsi JavaScript baru untuk menambahkan data berdasarkan input ke basis data secara AJAX.
+```
+<script>
+    ...
+    function addItem() {
+        fetch("{% url 'main:add_item_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItems)
+
+        document.getElementById("form").reset()
+        return false
+    }
+</script>
+```
+
+Terakhir, saya juga menambahkan kode fungsi onclick pada button "Add Product" pada modal untuk menjalankan fungsi addProduct() 
+```
+<script>
+...
+document.getElementById("button_add").onclick = addItem
+</script>
+```
+
+Selesai mengerjakan tugas saya melakukan git add, commit, dan push
 
 
 

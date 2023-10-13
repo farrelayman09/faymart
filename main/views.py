@@ -1,6 +1,8 @@
 import datetime
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponseNotFound
+from django.views.decorators.csrf import csrf_exempt
+
 from main.forms import ItemForm
 from django.urls import reverse
 from main.models import Item
@@ -25,7 +27,7 @@ def show_main(request):
         'name': request.user.username,
         'class': 'PBP F', # Kelas PBP
         'items': items,
-        'last_login': request.COOKIES['last_login'],
+        'last_login': request.COOKIES['last_login']
     }
 
     return render(request, "main.html", context)
@@ -156,3 +158,46 @@ def delete_product(request, id):
     item.delete()
     # Kembali ke halaman awal
     return HttpResponseRedirect(reverse('main:show_main'))
+
+def get_product_json(request):
+    product_item = Item.objects.filter(user=request.user)  # changed all to filter
+    return HttpResponse(serializers.serialize('json', product_item))
+
+@csrf_exempt
+def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_item = Item(name=name, price=price, amount=amount, description=description, user=user)
+        new_item.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+
+@csrf_exempt
+def delete_item_ajax(request, id):
+    item = Item.objects.filter(user=request.user).filter(pk=id).first()
+    if item.amount > 0:
+        item.delete()
+    return HttpResponse(b"DELETED", status=204)
+
+@csrf_exempt
+def inc_item_ajax(request, id):
+    item = Item.objects.filter(user=request.user).filter(pk=id).first()
+    if item.amount > 0:
+        item.amount+=1
+        item.save()
+    return HttpResponse(b"DELETED", status=204)
+
+@csrf_exempt
+def dec_item_ajax(request, id):
+    item = Item.objects.filter(user=request.user).filter(pk=id).first()
+    if item.amount > 0:
+        item.amount-=1
+        item.save()
+    return HttpResponse(b"DELETED", status=204)

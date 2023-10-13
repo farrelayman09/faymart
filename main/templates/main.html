@@ -3,13 +3,14 @@
 {% block content %}
 <style>
     body {
-        background-color: #0DD8E9; /* Change this to the desired blue color */
-        color: black; /* Set the text color to contrast with the background */
+        background-color: #0DD8E9; /*  blue color */
+        color: black; /* Set text color to contrast background */
     }
     /* CSS Style */
     .last-row {
     background-color: #9CF5FF;
     }
+
 </style>
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -55,112 +56,229 @@
 
 <h5>Class:</h5>
 <p>{{class}}</p>
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Amount</th>
-        <th>Description</th>
-        <th>Date Added</th>
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>Name</th>-->
+<!--        <th>Price</th>-->
+<!--        <th>Amount</th>-->
+<!--        <th>Description</th>-->
+<!--        <th>Date Added</th>-->
 
-    </tr>
+<!--    </tr>-->
 
-    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+<!--    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}-->
 
-    {% for item in items %}
-    <tr {% if forloop.last %}class="last-row"{% endif %}>
-        <td>{{item.name}}</td>
-        <td>{{item.price}}</td>
-        <td id="amount_{{ item.id }}">{{item.amount}}</td>
-        <td>{{item.description}}</td>
-        <td>{{item.date_added}}</td>
-        <td>
-            <button onclick="incrementAmount({{ item.id }})">+</button>
-            <button onclick="decrementAmount({{ item.id }})">-</button>
-        </td>
-        <td>
-            <form action="{% url 'main:remove_product' product_id=item.id %}" method="POST" id="deleteForm">
-                {% csrf_token %}
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="button" onclick="deleteProduct({{ item.id }})">Remove Product</button>
-            </form>
-        </td>
-        <td>
-            <a href="{% url 'main:edit_product' item.pk %}">
-                <button>
-                    Edit
-                </button>
-            </a>
-        </td>
-    </tr>
+<!--    {% for item in items %}-->
+<!--    <tr {% if forloop.last %}class="last-row"{% endif %}>-->
+<!--        <td>{{item.name}}</td>-->
+<!--        <td>{{item.price}}</td>-->
+<!--        <td id="amount_{{ item.id }}">{{item.amount}}</td>-->
+<!--        <td>{{item.description}}</td>-->
+<!--        <td>{{item.date_added}}</td>-->
+<!--        <td>-->
+<!--            <button onclick="incrementAmount({{ item.id }})">+</button>-->
+<!--            <button onclick="decrementAmount({{ item.id }})">-</button>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <form action="{% url 'main:remove_product' product_id=item.id %}" method="POST" id="deleteForm">-->
+<!--                {% csrf_token %}-->
+<!--                <input type="hidden" name="_method" value="DELETE">-->
+<!--                <button type="button" onclick="deleteProduct({{ item.id }})">Remove Product</button>-->
+<!--            </form>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <a href="{% url 'main:edit_product' item.pk %}">-->
+<!--                <button>-->
+<!--                    Edit-->
+<!--                </button>-->
+<!--            </a>-->
+<!--        </td>-->
+<!--    </tr>-->
 
-    {% endfor %}
-</table>
+<!--    {% endfor %}-->
+<!--</table>-->
+
+<table id="product_table"></table>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="col-form-label">Price:</label>
+                        <input type="number" class="form-control" id="price" name="price"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="col-form-label">Amount:</label>
+                        <input type="number" class="form-control" id="amount" name="amount"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row" id="item_cards"></div>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Product by AJAX</button>
+
 
 <br />
 
-<a href="{% url 'main:create_product' %}">
-    <button>
-        Add New Item
-    </button>
-</a>
+<!--<a href="{% url 'main:create_product' %}">-->
+<!--    <button>-->
+<!--        Add New Item-->
+<!--    </button>-->
+<!--</a>-->
 
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 
 
 <script>
-    function incrementAmount(productId) {
-        updateAmount(productId, 'increment');
+
+    async function getItems() {
+        return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
     }
 
-    function decrementAmount(productId) {
-        updateAmount(productId, 'decrement');
-    }
+    async function refreshItems() {
+            const items = await getItems();
+            const itemCardsContainer = document.getElementById("item_cards");
+            itemCardsContainer.innerHTML = "";
 
-    function updateAmount(productId, action) {
-        const url = action === 'increment' ? `/increment_amount/${productId}/` : `/decrement_amount/${productId}/`;
-        const csrfToken = '{{ csrf_token }}';
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.classList.add("col-lg-4", "col-md-6", "mb-4");
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({ action: action }),
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Error updating amount:', response.statusText);
+                card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                    <h5 class="card-title">${item.fields.name}</h5>
+                    <p class="card-text">${item.fields.description}</p>
+                    <p class="card-text">Amount: ${item.fields.amount}</p>
+                    <p class="card-text">Price: Rp${item.fields.price}</p>
+                    <p class="card-text">Date Added: ${item.fields.date_added}</p>
+                    <a><button onclick="deleteItem(${item.pk})" class="btn btn-danger" type="submit">Delete</button></a>
+                    <a><button onclick="incItem(${item.pk})" class="btn btn-danger" type="submit">+</button></a>
+                    <a><button onclick="decItem(${item.pk})" class="btn btn-danger" type="submit">-</button></a>
+                    </div>
+                </div>
+                `;
+                itemCardsContainer.appendChild(card);
+            });
             }
-        })
-        .then(data => {
-            document.getElementById(`amount_${productId}`).textContent = data.new_amount;
-        })
-        .catch(error => console.error('Error:', error));
+
+    refreshItems();
+
+    function addItem() {
+        fetch("{% url 'main:add_item_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItems)
+
+        document.getElementById("form").reset()
+        return false
     }
-    function deleteProduct(productId) {
-        const url = `/remove_product/${productId}/`;
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Product removed successfully');
-                // Optionally, you can reload the page or update the product list after successful deletion
-                location.reload();  // Reload the page
-            } else {
-                console.error('Error removing product:', response.status);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+
+    document.getElementById("button_add").onclick = addItem
+
+    async function deleteItem(id){
+        let url="{% url 'main:delete_item_ajax' '0' %}";
+        url=url.replace('0',id);
+        const response =await fetch(url,{
+            method: "DELETE",
+        }).then(refreshItems);
     }
+
+    async function incItem(id){
+        let url="{% url 'main:inc_item_ajax' '0' %}";
+        url=url.replace('0',id);
+        const response =await fetch(url,{
+            method: "POST",
+        }).then(refreshItems);
+    }
+
+    async function decItem(id){
+        let url="{% url 'main:dec_item_ajax' '0' %}";
+        url=url.replace('0',id);
+        const response =await fetch(url,{
+            method: "POST",
+        }).then(refreshItems);
+    }
+
+
+
+
+<!--    function incrementAmount(productId) {-->
+<!--        updateAmount(productId, 'increment');-->
+<!--    }-->
+
+<!--    function decrementAmount(productId) {-->
+<!--        updateAmount(productId, 'decrement');-->
+<!--    }-->
+
+<!--    function updateAmount(productId, action) {-->
+<!--        const url = action === 'increment' ? `/increment_amount/${productId}/` : `/decrement_amount/${productId}/`;-->
+<!--        const csrfToken = '{{ csrf_token }}';-->
+
+<!--        fetch(url, {-->
+<!--            method: 'POST',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--                'X-CSRFToken': csrfToken-->
+<!--            },-->
+<!--            body: JSON.stringify({ action: action }),-->
+<!--        })-->
+<!--        .then(response => {-->
+<!--            if (response.ok) {-->
+<!--                return response.json();-->
+<!--            } else {-->
+<!--                throw new Error('Error updating amount:', response.statusText);-->
+<!--            }-->
+<!--        })-->
+<!--        .then(data => {-->
+<!--            document.getElementById(`amount_${productId}`).textContent = data.new_amount;-->
+<!--        })-->
+<!--        .catch(error => console.error('Error:', error));-->
+<!--    }-->
+<!--    function deleteProduct(productId) {-->
+<!--        const url = `/remove_product/${productId}/`;-->
+<!--        fetch(url, {-->
+<!--            method: 'DELETE',-->
+<!--            headers: {-->
+<!--                'Content-Type': 'application/json',-->
+<!--                'X-CSRFToken': '{{ csrf_token }}'-->
+<!--            },-->
+<!--        })-->
+<!--        .then(response => {-->
+<!--            if (response.ok) {-->
+<!--                console.log('Product removed successfully');-->
+<!--                // Optionally, you can reload the page or update the product list after successful deletion-->
+<!--                location.reload();  // Reload the page-->
+<!--            } else {-->
+<!--                console.error('Error removing product:', response.status);-->
+<!--            }-->
+<!--        })-->
+<!--        .catch(error => console.error('Error:', error));-->
+<!--    }-->
 </script>
 
 {% endblock content %}

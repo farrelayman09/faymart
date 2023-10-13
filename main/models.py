@@ -8,8 +8,3 @@ class Item(models.Model):
     price = models.IntegerField()
     date_added = models.DateField(auto_now_add=True)
     description = models.TextField()
-
-class Employee(models.Model):
-    name = models.CharField(max_length=255)
-    age = models.IntegerField()
-    hobby = models.TextField()

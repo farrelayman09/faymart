@@ -7,7 +7,7 @@
 
 
 Link Adaptable: https://faymart.adaptable.app/main/
-Link pbp.cs.ui.ac.id http://farrel-ayman-tugas.pbp.cs.ui.ac.id./
+Link pbp.cs.ui.ac.id http://farrel-ayman-tugas.pbp.cs.ui.ac.id/
 
 # Tugas 2
 Nama: Farrel Ayman Abisatyo<br>

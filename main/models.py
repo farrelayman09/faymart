@@ -8,7 +8,3 @@ class Item(models.Model):
     price = models.IntegerField()
     date_added = models.DateField(auto_now_add=True)
     description = models.TextField()
-
-class Employee(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    department = models.CharField(max_length=255)   

@@ -1,6 +1,6 @@
 import datetime
+import json
 
-from django.core.serializers import json
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt

@@ -159,34 +159,34 @@
         return fetch("{% url 'main:get_product_json' %}").then((res) => res.json())
     }
 
-    async function refreshItems() {
-            const items = await getItems();
-            const itemCardsContainer = document.getElementById("item_cards");
-            itemCardsContainer.innerHTML = "";
+        async function refreshItems() {
+                const items = await getItems();
+                const itemCardsContainer = document.getElementById("item_cards");
+                itemCardsContainer.innerHTML = "";
 
-            items.forEach((item) => {
-                const card = document.createElement("div");
-                card.classList.add("col-lg-4", "col-md-6", "mb-4");
+                items.forEach((item) => {
+                    const card = document.createElement("div");
+                    card.classList.add("col-lg-4", "col-md-6", "mb-4");
 
-                card.innerHTML = `
-                <div class="card">
-                    <div class="card-body">
-                    <h5 class="card-title">${item.fields.name}</h5>
-                    <p class="card-text">${item.fields.description}</p>
-                    <p class="card-text">Amount: ${item.fields.amount}</p>
-                    <p class="card-text">Price: Rp${item.fields.price}</p>
-                    <p class="card-text">Date Added: ${item.fields.date_added}</p>
-                    <a><button onclick="deleteItem(${item.pk})" class="btn btn-danger" type="submit">Delete</button></a>
-                    <a><button onclick="incItem(${item.pk})" class="btn btn-danger" type="submit">+</button></a>
-                    <a><button onclick="decItem(${item.pk})" class="btn btn-danger" type="submit">-</button></a>
+                    card.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title">${item.fields.name}</h5>
+                        <p class="card-text">${item.fields.description}</p>
+                        <p class="card-text">Amount: ${item.fields.amount}</p>
+                        <p class="card-text">Price: Rp${item.fields.price}</p>
+                        <p class="card-text">Date Added: ${item.fields.date_added}</p>
+                        <a><button onclick="deleteItem(${item.pk})" class="btn btn-danger" type="submit">Delete</button></a>
+                        <a><button onclick="incItem(${item.pk})" class="btn btn-danger" type="submit">+</button></a>
+                        <a><button onclick="decItem(${item.pk})" class="btn btn-danger" type="submit">-</button></a>
+                        </div>
                     </div>
-                </div>
-                `;
-                itemCardsContainer.appendChild(card);
-            });
-            }
+                    `;
+                    itemCardsContainer.appendChild(card);
+                });
+                }
 
-    refreshItems();
+        refreshItems();
 
     function addItem() {
         fetch("{% url 'main:add_item_ajax' %}", {
